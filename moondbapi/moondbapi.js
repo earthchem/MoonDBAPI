@@ -23,405 +23,7 @@ client.ping({
   }
 });
 
-function parseSpecimens(hits) {
-  let results = []
-  hits.forEach(function (hit) {
-    specimen = {
-      "specimenId": hit._source.sampling_feature_code,
-      "specimenType": hit._source.sample_type,
-      "materialClassifier": hit._source.material_classifier,
-      "mission": hit._source.mission,
-      "geographicFeature": hit._source.geographic_feature,
-      "lunarStation": hit._source.lunar_station,
-      "weight": hit._source.weight,
-      "pristinity": hit._source.pristinity,
-      "pristinityDate": hit._source.pristinity_date,
-      "description": hit._source.sampling_feature_description
-    };
-    results.push(specimen)
-  })
-  
-  let specimens = {
-    "count": hits.length,
-    "results": results
-  }
-  return specimens
-}
-
-function parseSpecimenList(hits) {
-  let results = []
-  hits.forEach(function (hit) {
-    specimen = {
-      "specimenCode": hit._source.specimenCode,
-      "specimenName": hit._source.specimenName,
-      "parentSpecimen": hit._source.parentSpecimen,
-      "childSpecimens": hit._source.childSpecimens,
-      "specimenType": hit._source.specimenType,
-      "samplingTechnique": hit._source.samplingTechnique,
-      "mission": hit._source.mission,
-      "landmark": hit._source.landmark.landmarkName,
-      "lunarStation": hit._source.lunarStation,
-      "returnContainer": hit._source.returnContainer,
-      "weight": hit._source.weight,
-      "pristinity": hit._source.pristinity,
-      "pristinityDate": hit._source.pristinityDate,
-      "description": hit._source.specimenDescription
-    };
-    results.push(specimen)
-  })
-
-  let specimens = {
-    "count": hits.length,
-    "results": results
-  }
-  return specimens
-}
-
-
-function parseSpecimeno(hits) {
-
-  let specimen = {};
-  hits.forEach(function (hit) {
-    specimen = {
-      "specimenId": hit._source.sampling_feature_code,
-      "specimenType": hit._source.sample_type,
-      "materialClassifier": hit._source.material_classifier,
-      "mission": hit._source.mission,
-      "geographicFeature": hit._source.geographic_feature,
-      "lunarStation": hit._source.lunar_station,
-      "weight": hit._source.weight,
-      "pristinity": hit._source.pristinity,
-      "pristinityDate": hit._source.pristinity_date,
-      "description": hit._source.sampling_feature_description
-    };
-
-  });
-  return specimen;
-}
-
-function parseSpecimen(hits) {
-
-  let specimen = {};
-  hits.forEach(function (hit) {
-    specimen = {
-      "specimenCode": hit._source.specimenCode,
-      "specimenName": hit._source.specimenName,
-      "parentSpecimen": hit._source.parentSpecimen,
-      "childSpecimens": hit._source.childSpecimens,
-      "specimenType": hit._source.specimenType,
-      "samplingTechnique": hit._source.samplingTechnique,
-      "mission": hit._source.mission,
-      "landmark": hit._source.landmark.landmarkName,
-      "lunarStation": hit._source.lunarStation,
-      "returnContainer": hit._source.returnContainer,
-      "weight": hit._source.weight,
-      "pristinity": hit._source.pristinity,
-      "pristinityDate": hit._source.pristinityDate,
-      "description": hit._source.specimenDescription      
-    };
-
-  });
-  return specimen;
-}
-
-function parseDataWithSpecimen(hits) {
-  let results = [];
-  dataHits = hits[0]._source.analysisResults;
-  dataHits.forEach(function (hit) {
-    analysisResult = {
-      "analysisCode": hit.analysisCode,
-      "analizedMaterial": hit.analizedMaterial,
-      "comment":  hit.analysisComment,
-      "dataset":  hit.datasetCode,
-      "citation": hit.citation.citationCode,
-      "dataResults":  hit.dataResults
-    };
-    results.push(analysisResult)
-  })
-
-  let data = {
-    "count": dataHits.length,
-    "results": results
-  }
-  return data
-}
-
-function parseDataWitham(hits, material) {
-  let results = [];
-  let count = 0;
-  hits.forEach(function (hit) {
-   dataHits = hit._source.analysisResults;
-   count = count + dataHits.length;
-   dataHits.forEach(function (dhit) {
-    if (dhit.analizedMaterial.includes(material)) {
-      analysisResult = {
-      "analysisCode": dhit.analysisCode,
-      "analizedMaterial": dhit.analizedMaterial,
-      "comment":  dhit.analysisComment,
-      "dataset": dhit.datasetCode,
-      "citation": dhit.citation.citationCode,
-      "dataResults":  dhit.dataResults
-    };
-    results.push(analysisResult)
-    }
-  })
-  })
-
-  let data = {
-    "count": hits.length,
-    "results": results
-  }
-  return data
-}
-
-function parseDataWithCitation(hits, citationCode) {
-  let results = [];
-  let count = 0;
-  hits.forEach(function (hit) {
-   dataHits = hit._source.analysisResults;
-   count = count + dataHits.length;
-   dataHits.forEach(function (dhit) {
-    if (dhit.citation.citationCode === citationCode) {
-      analysisResult = {
-      "analysisCode": dhit.analysisCode,
-      "analizedMaterial": dhit.analizedMaterial,
-      "comment":  dhit.analysisComment,
-      "dataset": dhit.datasetCode,
-      "citation": dhit.citation.citationCode,
-      "dataResults":  dhit.dataResults
-    };
-    results.push(analysisResult)
-    }
-  })
-  })
-
-  let data = {
-    "count": hits.length,
-    "results": results
-  }
-  return data
-}
-
-
-function parseNestedDataResults(dataHits,analyte,method) {
-  let dResults = []
-  dataHits.forEach(function (dhit) {
-    if (analyte.length === 0) {
-      if(method.length === 0) {
-        dResults.push(dhit)
-      } else {
-        for(k=0; k<method.length; k++) {
-          if(dhit.method === method[k]) {
-            dResults.push(dhit)
-          }
-        }
-      }
-    } else {
-      for(j=0; j<analyte.length; j++) {
-        if(dhit.variable === analyte[j]) {
-          if(method.length === 0) {
-            dResults.push(dhit)
-          } else {
-            for(k=0; k<method.length; k++) {
-              if(dhit.method === method[k]) {
-                dResults.push(dhit)
-              }
-            }
-          }
-        }
-      }
-    }
-  })
-  return dResults
-}
-
-function parseNestedAnalysisResults(hits, material, analyte, method) {
-  let aResults = [];
- 
-  let count = 0;
-  hits.forEach(function (hit) {
-    analysisHits = hit._source.analysisResults;
-    analysisHits.forEach(function (ahit) {
-      if(material.length === 0) {
-        let dResults = parseNestedDataResults(ahit.dataResults,analyte,method)
-        analysisResult = {
-          "analysisCode": ahit.analysisCode,
-          "analizedMaterial": ahit.analizedMaterial,
-          "comment":  ahit.analysisComment,
-          "dataset": ahit.datasetCode,
-          "citation": ahit.citation.citationCode,
-          "dataResults":  dResults
-        };
-        aResults.push(analysisResult)
-        count += 1
-      } else {
-        for(i=0; i<material.length; i++){
-          if (ahit.analizedMaterial.includes(material[i])) {
-            let dResults = parseNestedDataResults(ahit.dataResults,analyte,method) 
-            analysisResult = {
-      	      "analysisCode": ahit.analysisCode,
-     	      "analizedMaterial": ahit.analizedMaterial,
-      	      "comment":  ahit.analysisComment,
-              "dataset": ahit.datasetCode,
-              "citation": ahit.citation.citationCode,
-              "dataResults":  dResults
-            }; 
-            aResults.push(analysisResult)
-            count += 1
-          }
-        }
-      }
-    })
-  })
-
-  let data = {
-    "count": count,
-    "results": aResults
-  }
-  return data
-}
-
-
-function parseSpecimenWithAnalysis(tophits,hits) {
-
-  let specimen = {};
-  
-  tophits.forEach(function (tophit) {
-    let analysises = [];
- 
-    hits.forEach(function (hit) {
-      let citation = {
-        "code": hit._source.dataset_code,
-        "title": hit._source.citation_title,
-        "Publisher": hit._source.citation_publisher,
-        "publicationYear": hit._source.citation_publication_year,
-        "journal": hit._source.citation_journal,
-        "issue": hit._source.citation_issue,
-        "volume": hit._source.citation_volume,
-        "authors": (hit._source.citation_authors).split('/')
-      };
-
-      let dataset = {
-        "code": hit._source.dataset_code,
-        "title": hit._source.dataset_title,
-        "citation": citation
-       };    
-      let analysis = {
-        "spotId": hit._source.spot_id,
-        "material": hit._source.material_code,
-        "materialClassifier" : hit._source.material_classifier,
-        "mineralSize" : hit._source.mineral_size,
-        "grain": hit._source.grain,
-        "calcAvge": hit._source.calc_avge,
-        "methodCode": hit._source.method_code,
-        "methodName": hit._source.method_name,
-        "analyte": hit._source.variable_code,
-        "analyteGroup": (hit._source.analyte_path).split('/')[1],
-        "value": hit._source.value,
-        "unit": hit._source.unit,
-        "dataset": dataset
-      }
-      analysises.push(analysis);
-    })
-  
-    specimen = {
-      "specimenId": tophit._source.sampling_feature_code,
-      "specimenType": tophit._source.sample_type,
-      "materialClassifier": tophit._source.material_classifier,
-      "mission": tophit._source.mission,
-      "geographicFeature": tophit._source.geographic_feature,
-      "lunarStation": tophit._source.lunar_station,
-      "weight": tophit._source.weight,
-      "pristinity": tophit._source.pristinity,
-      "pristinityDate": tophit._source.pristinity_date,
-      "description": tophit._source.sampling_feature_description,
-      "analysises": analysises
-    };
-  });
-  return specimen;
-}
-
-function parseCVList(hits) {
-  let results = [];
-  hits.forEach(function (hit) {
-    let result = {
-      "name": hit.key
-    }
-    results.push(result)
-  })
-  let CVList = {
-    "count": hits.length,
-    "result": results
-  }
-  return CVList
-}
-
-function parseLandmarks(hits) {
-  let results = [];
-  hits.forEach(function (hit) {
-    let result = {
-      "name": hit.key,
-      "GPNFID": hit.GPNFID.buckets[0].key,
-      "GPNFURL": hit.GPNFURL.buckets[0].key,
-      "latitude": hit.latitude.buckets[0].key.toFixed(2),
-      "longitude": hit.longitude.buckets[0].key.toFixed(2)
-    }
-    results.push(result)
-  })
-  let CVList = {
-    "count": hits.length,
-    "result": results
-  }
-  return CVList
-}
-
-function parseCitations(hits) {
-  let results = [];
-  hits.forEach(function (hit) {
-    titleB = hit.title.buckets
-    typeB = hit.type.buckets
-    journalB = hit.journal.buckets
-    if(journalB.length === 0) {
-      journalTitle = null  
-    } else {
-      journalTitle = journalB[0].key
-    }
-    let result = {
-      "code": hit.key,
-      "title": titleB[0].key,
-      "type": typeB[0].key,
-      "journal": journalTitle
-    }
-    results.push(result)
-  })
-  let CVList = {
-    "count": hits.length,
-    "result": results
-  }
-  return CVList
-}
-
-function parseDatasets(hits) {
-  let results = [];
-  hits.forEach(function (hit) {
-    titleB = hit.title.buckets
-    if(titleB.length === 0) {
-      titleT = null
-    } else {
-      titleT = titleB[0].key
-    }
-    let result = {
-      "code": hit.key,
-      "title": titleT
-    }
-    results.push(result)
-  })
-  let CVList = {
-    "count": hits.length,
-    "result": results
-  }
-  return CVList
-}
+var parser = require("./modules/parser.js");
 
 
 router.get('/authorities/missions', function(req,res) {
@@ -442,7 +44,7 @@ router.get('/authorities/missions', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.missions.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -492,7 +94,7 @@ router.get('/authorities/landmarks', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.landmarks.buckets
-      res.send(parseLandmarks(hits))
+      res.send(parser.parseLandmarks(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -532,7 +134,7 @@ router.get('/authorities/datasets', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.results.datasets.buckets
-      res.send(parseDatasets(hits))
+      res.send(parser.parseDatasets(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -582,7 +184,7 @@ router.get('/authorities/citations', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.results.citations.buckets
-      res.send(parseCitations(hits))
+      res.send(parser.parseCitations(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -616,7 +218,7 @@ router.get('/authorities/people', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.results.people.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -642,7 +244,7 @@ router.get('/cv/specimentypes', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.specimenTypes.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -667,7 +269,7 @@ router.get('/cv/samplingtechniques', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.samplingTechniques.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -701,7 +303,7 @@ router.get('/cv/analizedMaterials', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.results.analizedMaterials.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -733,7 +335,7 @@ router.get('/cv/analytes', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.results.analytes.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -765,7 +367,7 @@ router.get('/cv/analysismethods', function(req,res) {
     }
   }).then(function (resp) {
       var hits = resp.aggregations.results.analysisMethods.buckets
-      res.send(parseCVList(hits))
+      res.send(parser.parseCVList(hits))
     }, function (err) {
     console.trace(err.message)
     res.send(err.message)
@@ -795,7 +397,7 @@ router.get('/specimenlist/mission/:missionName', function (req,res) {
       res.send(msg)
     } else {
 	let hits = resp.hits.hits
-        res.send(parseSpecimenList(hits))
+        res.send(parser.parseSpecimenList(hits))
     }  
   },function (err) {
     console.trace(err.message)
@@ -825,7 +427,7 @@ router.get('/specimenlist/landmark/:landmarkName', function (req,res) {
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseSpecimenList(hits))
+        res.send(parser.parseSpecimenList(hits))
     }
   },function (err) {
     console.trace(err.message)
@@ -854,7 +456,7 @@ router.get('/specimenlist/specimentype/:specimenType', function (req,res) {
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseSpecimenList(hits))
+        res.send(parser.parseSpecimenList(hits))
     }
   },function (err) {
     console.trace(err.message)
@@ -883,7 +485,7 @@ router.get('/specimenlist/samplingtechnique/:samplingTechnique', function (req,r
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseSpecimenList(hits))
+        res.send(parser.parseSpecimenList(hits))
     }
   },function (err) {
     console.trace(err.message)
@@ -912,7 +514,7 @@ router.get('/specimen/:specimenCode', function (req,res) {
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseSpecimen(hits))
+        res.send(parser.parseSpecimen(hits))
     }
   },function (err) {
     console.trace(err.message)
@@ -941,11 +543,11 @@ router.get('/data/specimen/:specimenCode', function (req,res) {
     }
   }).then(function (resp) {
     if (resp.hits.total == 0) {
-      let msg = 'Specimen <b>' + specimenCode + '</b> is not exisist in MoonDB!'
+      let msg = 'Data not exist in MoonDB for <b>' + specimenCode + '</b>!'
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseDataWithSpecimen(hits))
+        res.send(parser.parseDataWithSpecimen(hits))
     }
   },function (err) {
     console.trace(err.message)
@@ -985,12 +587,12 @@ router.get('/data/analizedmaterial/:analizedMaterial', function (req,res) {
       }
     }
   }).then(function (resp) {
-    if (resp.hits.total == 0) {
-      let msg = 'Specimen <b>' + specimenCode + '</b> is not exisist in MoonDB!'
+    if (resp.hits.total === 0) {
+      let msg = 'Data not exisist in MoonDB for <b>' + analizedMaterial + '</b>!'
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseDataWitham(hits,material))
+        res.send(parser.parseDataWitham(hits,material))
     }
   },function (err) {
     console.trace(err.message)
@@ -1030,11 +632,11 @@ router.get('/data/citation/:citationCode', function (req,res) {
     }
   }).then(function (resp) {
     if (resp.hits.total == 0) {
-      let msg = 'Specimen <b>' + specimenCode + '</b> is not exisist in MoonDB!'
+      let msg = 'Data not exisist in MoonDB for <b>' +citationCode + '</b>!'
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseDataWithCitation(hits,citationCode))
+        res.send(parser.parseDataWithCitation(hits,citationCode))
     }
   },function (err) {
     console.trace(err.message)
@@ -1043,64 +645,6 @@ router.get('/data/citation/:citationCode', function (req,res) {
 })
 
 
-router.get('/specimens/:id', function (req, res) {
-
-let sampling_feature_code = req.params.id
-
-client.search({
-  index: 'moondb_v1',
-  type: 'specimens',
-  body: {
-    query: {
-      term: {
-        "sampling_feature_code.keyword": sampling_feature_code
-      }
-    }
-  }
-}).then(function (resp) {
-    console.log(resp.hits.total)
-    if (resp.hits.total == 0) {
-      let msg = 'Sample <b>' + sampling_feature_code + '</b> is not exisist in MoonDB!'
-      res.send(msg)
-    } else {
-      var top_hits = resp.hits.hits      
-      client.search({
-        size: 9999,
-  	index: 'moondb_v1',
- 	body: {
-          query: {
-            has_parent: {
-	      parent_type : 'specimens',
-              query: {
-		match: {
-		  sampling_feature_code: sampling_feature_code
-                }
-              }
-            }
-          }
-        }
-      }).then(function (resp) {
-      console.log(resp.hits.total)
-      if (resp.hits.total == 0) {
-        res.send(parseSpecimeno(top_hits))
-      } else {
-
-        var hits = resp.hits.hits
-        console.log('Count of analysis hits ' + resp.hits.total);
-       // res.send(hits)
-        res.send(parseSpecimenWithAnalysis(top_hits,hits))
-  
-      }
-    }, function (err) {
-      console.trace(err.message)
-      res.send(err.message)
-   })
-    }
-}, function (err) {
-    console.trace(err.message)
-    res.send(err.message)
-})
-})
 
 //{"mission":[],"landmark":[],"specimenType":[],"samplingTechnique":[],"analizedMaterial":[],"analyte":[],"analysisMethod":[]}
 
@@ -1192,7 +736,7 @@ router.get("/data/:queryParam",function(req,res){
       res.send(msg)
     } else {
         let hits = resp.hits.hits
-        res.send(parseNestedAnalysisResults(hits,analizedMaterial,analyte,analysisMethod))
+        res.send(parser.parseNestedAnalysisResults(hits,analizedMaterial,analyte,analysisMethod))
     }
   },function (err) {
     console.trace(err.message)
