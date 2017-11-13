@@ -124,6 +124,163 @@ function parseSpecimen(hits) {
   return specimen;
 }
 
+function parseDataWithSpecimen(hits) {
+  let results = [];
+  dataHits = hits[0]._source.analysisResults;
+  dataHits.forEach(function (hit) {
+    analysisResult = {
+      "analysisCode": hit.analysisCode,
+      "analizedMaterial": hit.analizedMaterial,
+      "comment":  hit.analysisComment,
+      "dataset":  hit.datasetCode,
+      "citation": hit.citation.citationCode,
+      "dataResults":  hit.dataResults
+    };
+    results.push(analysisResult)
+  })
+
+  let data = {
+    "count": dataHits.length,
+    "results": results
+  }
+  return data
+}
+
+function parseDataWitham(hits, material) {
+  let results = [];
+  let count = 0;
+  hits.forEach(function (hit) {
+   dataHits = hit._source.analysisResults;
+   count = count + dataHits.length;
+   dataHits.forEach(function (dhit) {
+    if (dhit.analizedMaterial.includes(material)) {
+      analysisResult = {
+      "analysisCode": dhit.analysisCode,
+      "analizedMaterial": dhit.analizedMaterial,
+      "comment":  dhit.analysisComment,
+      "dataset": dhit.datasetCode,
+      "citation": dhit.citation.citationCode,
+      "dataResults":  dhit.dataResults
+    };
+    results.push(analysisResult)
+    }
+  })
+  })
+
+  let data = {
+    "count": hits.length,
+    "results": results
+  }
+  return data
+}
+
+function parseDataWithCitation(hits, citationCode) {
+  let results = [];
+  let count = 0;
+  hits.forEach(function (hit) {
+   dataHits = hit._source.analysisResults;
+   count = count + dataHits.length;
+   dataHits.forEach(function (dhit) {
+    if (dhit.citation.citationCode === citationCode) {
+      analysisResult = {
+      "analysisCode": dhit.analysisCode,
+      "analizedMaterial": dhit.analizedMaterial,
+      "comment":  dhit.analysisComment,
+      "dataset": dhit.datasetCode,
+      "citation": dhit.citation.citationCode,
+      "dataResults":  dhit.dataResults
+    };
+    results.push(analysisResult)
+    }
+  })
+  })
+
+  let data = {
+    "count": hits.length,
+    "results": results
+  }
+  return data
+}
+
+
+function parseNestedDataResults(dataHits,analyte,method) {
+  let dResults = []
+  dataHits.forEach(function (dhit) {
+    if (analyte.length === 0) {
+      if(method.length === 0) {
+        dResults.push(dhit)
+      } else {
+        for(k=0; k<method.length; k++) {
+          if(dhit.method === method[k]) {
+            dResults.push(dhit)
+          }
+        }
+      }
+    } else {
+      for(j=0; j<analyte.length; j++) {
+        if(dhit.variable === analyte[j]) {
+          if(method.length === 0) {
+            dResults.push(dhit)
+          } else {
+            for(k=0; k<method.length; k++) {
+              if(dhit.method === method[k]) {
+                dResults.push(dhit)
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+  return dResults
+}
+
+function parseNestedAnalysisResults(hits, material, analyte, method) {
+  let aResults = [];
+ 
+  let count = 0;
+  hits.forEach(function (hit) {
+    analysisHits = hit._source.analysisResults;
+    analysisHits.forEach(function (ahit) {
+      if(material.length === 0) {
+        let dResults = parseNestedDataResults(ahit.dataResults,analyte,method)
+        analysisResult = {
+          "analysisCode": ahit.analysisCode,
+          "analizedMaterial": ahit.analizedMaterial,
+          "comment":  ahit.analysisComment,
+          "dataset": ahit.datasetCode,
+          "citation": ahit.citation.citationCode,
+          "dataResults":  dResults
+        };
+        aResults.push(analysisResult)
+        count += 1
+      } else {
+        for(i=0; i<material.length; i++){
+          if (ahit.analizedMaterial.includes(material[i])) {
+            let dResults = parseNestedDataResults(ahit.dataResults,analyte,method) 
+            analysisResult = {
+      	      "analysisCode": ahit.analysisCode,
+     	      "analizedMaterial": ahit.analizedMaterial,
+      	      "comment":  ahit.analysisComment,
+              "dataset": ahit.datasetCode,
+              "citation": ahit.citation.citationCode,
+              "dataResults":  dResults
+            }; 
+            aResults.push(analysisResult)
+            count += 1
+          }
+        }
+      }
+    })
+  })
+
+  let data = {
+    "count": count,
+    "results": aResults
+  }
+  return data
+}
+
 
 function parseSpecimenWithAnalysis(tophits,hits) {
 
@@ -221,11 +378,19 @@ function parseLandmarks(hits) {
 function parseCitations(hits) {
   let results = [];
   hits.forEach(function (hit) {
+    titleB = hit.title.buckets
+    typeB = hit.type.buckets
+    journalB = hit.journal.buckets
+    if(journalB.length === 0) {
+      journalTitle = null  
+    } else {
+      journalTitle = journalB[0].key
+    }
     let result = {
       "code": hit.key,
-      "title": hit.title.buckets[0].key,
-      "type": hit.type.buckets[0].key,
-      "journal": hit.journal.buckets[0].key
+      "title": titleB[0].key,
+      "type": typeB[0].key,
+      "journal": journalTitle
     }
     results.push(result)
   })
@@ -239,9 +404,15 @@ function parseCitations(hits) {
 function parseDatasets(hits) {
   let results = [];
   hits.forEach(function (hit) {
+    titleB = hit.title.buckets
+    if(titleB.length === 0) {
+      titleT = null
+    } else {
+      titleT = titleB[0].key
+    }
     let result = {
       "code": hit.key,
-      "title": hit.title.buckets[0].key
+      "title": titleT
     }
     results.push(result)
   })
@@ -749,6 +920,128 @@ router.get('/specimen/:specimenCode', function (req,res) {
   })
 })
 
+router.get('/data/specimen/:specimenCode', function (req,res) {
+  let specimenCode = req.params.specimenCode
+
+  client.search({
+    size: 9999,
+    index: 'moondb_j',
+    type: 'specimen',
+    _source: ['analysisResults.citation.citationCode','analysisResults.datasetCode','analysisResults.analysisComment','analysisResults.analysisCode','analysisResults.analizedMaterial','analysisResults.dataResults'],
+    body: {
+      query: {
+        bool: {
+          must: {
+            term: {
+              "specimenCode.keyword": specimenCode
+            }
+          }
+        }
+      }
+    }
+  }).then(function (resp) {
+    if (resp.hits.total == 0) {
+      let msg = 'Specimen <b>' + specimenCode + '</b> is not exisist in MoonDB!'
+      res.send(msg)
+    } else {
+        let hits = resp.hits.hits
+        res.send(parseDataWithSpecimen(hits))
+    }
+  },function (err) {
+    console.trace(err.message)
+    res.send(err.message)
+  })
+})
+
+router.get('/data/analizedmaterial/:analizedMaterial', function (req,res) {
+  let analizedMaterial = '*' + req.params.analizedMaterial + '*'
+  let material = req.params.analizedMaterial
+  client.search({
+    size: 9999,
+    index: 'moondb_j',
+    type: 'specimen',
+    _source: ['analysisResults.citation.citationCode','analysisResults.datasetCode','analysisResults.analysisComment','analysisResults.analysisCode','analysisResults.analizedMaterial','analysisResults.dataResults'],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                "parentSpecimen.keyword": "NULL"
+              }
+            },
+            {
+              nested: {
+                path: "analysisResults",
+                query: {
+                  wildcard: {
+                    "analysisResults.analizedMaterial.keyword": analizedMaterial
+                  }
+                }
+              }
+            } 
+          ]
+        }
+      }
+    }
+  }).then(function (resp) {
+    if (resp.hits.total == 0) {
+      let msg = 'Specimen <b>' + specimenCode + '</b> is not exisist in MoonDB!'
+      res.send(msg)
+    } else {
+        let hits = resp.hits.hits
+        res.send(parseDataWitham(hits,material))
+    }
+  },function (err) {
+    console.trace(err.message)
+    res.send(err.message)
+  })
+})
+
+router.get('/data/citation/:citationCode', function (req,res) {
+  let citationCode = req.params.citationCode
+  client.search({
+    size: 9999,
+    index: 'moondb_j',
+    type: 'specimen',
+    _source: ['analysisResults.citation.citationCode','analysisResults.datasetCode','analysisResults.analysisComment','analysisResults.analysisCode','analysisResults.analizedMaterial','analysisResults.dataResults'],
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                "parentSpecimen.keyword": "NULL"
+              }
+            },
+            {
+              nested: {
+                path: "analysisResults.citation",
+                query: {
+                  term: {
+                    "analysisResults.citation.citationCode.keyword": citationCode
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }).then(function (resp) {
+    if (resp.hits.total == 0) {
+      let msg = 'Specimen <b>' + specimenCode + '</b> is not exisist in MoonDB!'
+      res.send(msg)
+    } else {
+        let hits = resp.hits.hits
+        res.send(parseDataWithCitation(hits,citationCode))
+    }
+  },function (err) {
+    console.trace(err.message)
+    res.send(err.message)
+  })
+})
+
 
 router.get('/specimens/:id', function (req, res) {
 
@@ -808,6 +1101,105 @@ client.search({
     res.send(err.message)
 })
 })
+
+//{"mission":[],"landmark":[],"specimenType":[],"samplingTechnique":[],"analizedMaterial":[],"analyte":[],"analysisMethod":[]}
+
+router.get("/data/:queryParam",function(req,res){
+  let json = JSON.parse(req.params.queryParam)
+  let mission = json.mission
+  let landmark = json.landmark
+  let specimenType = json.specimenType
+  let samplingTechnique = json.samplingTechnique
+  let analizedMaterial = json.analizedMaterial
+  let analyte = json.analyte
+  let analysisMethod = json.analysisMethod
+  
+  let topParamCount = [mission.length,landmark.length,specimenType.length,samplingTechnique.length]  
+  let nest2ParamCount = [analyte.length,analysisMethod.length]
+
+  let missionQuery ={terms:{"mission.keyword": mission}}
+  let landmarkQuery ={terms:{"landmark.landmarkName.keyword": landmark}} 
+  
+  let q = ""
+  for(j=0; j<specimenType.length; j++) {
+     let sType = '*' + specimenType[j] + '*'
+     let qw = {wildcard:{"specimenType.keyword":sType}}
+     q = q + "," + JSON.stringify(qw)
+  }
+  q = q.slice(1)
+  let specimenTypeQuery = {bool:{should:[JSON.parse(q)]}}
+  //let specimenTypeQuery = JSON.parse(specimenTypeQ)
+ 
+  let samplingTechniqueQuery ={terms:{"samplingTechnique.keyword": samplingTechnique}} 
+  let topQuery = [missionQuery,landmarkQuery,specimenTypeQuery,samplingTechniqueQuery]
+ 
+  let topFilter = ""
+  for(i=0; i< topParamCount.length; i++){
+    console.log(topQuery[i])
+    if(topParamCount[i] != 0)
+      topFilter = topFilter + "," + JSON.stringify(topQuery[i])
+  }
+  topFilter = topFilter.slice(1)
+  
+  let analyteQuery = {terms:{"analysisResults.dataResults.variable.keyword":analyte}}
+  let analysisMethodQuery = {terms:{"analysisResults.dataResults.method.keyword":analysisMethod}}
+  let nest2Query = [analyteQuery,analysisMethodQuery]
+  
+  let nest2Filter =""
+  for(m=0; m<nest2ParamCount.length; m++){
+    if(nest2ParamCount[m] != 0)
+      nest2Filter = nest2Filter + "," + JSON.stringify(nest2Query[m])
+  }
+  nest2Filter = nest2Filter.slice(1)
+  let queryNest2 = '{"nested":{"path":"analysisResults.dataResults","query":{"bool":{"must":[' + nest2Filter + ']}}}}'
+
+  let nestFilter = '{"nested":{"path":"analysisResults","query":{"bool":{"must":['
+  if(analizedMaterial.length>0){
+    let qAM = ""
+    for(k=0; k<analizedMaterial.length; k++) {
+      let amType = '*' + analizedMaterial[k] + '*'
+      let qtext = {wildcard:{"analysisResults.analizedMaterial.keyword":amType}}
+      qAM = qAM + "," + JSON.stringify(qtext)
+    }
+    qAM = qAM.slice(1)
+    let analizedMaterialQuery = '{"bool":{"should":[' + qAM + ']}}'
+    
+    nestFilter = nestFilter + analizedMaterialQuery + ',' + queryNest2 + ']}}}}'
+  } else {
+    nestFilter = nestFilter + queryNest2 + ']}}}}'
+  }
+  
+  let queryObj = '{"must":[{"match":{"parentSpecimen.keyword": "NULL"}}'+',' + topFilter + ',' + nestFilter + ']}'
+  
+
+  
+  let searchParams = {
+    	size: 9999,
+    	index: 'moondb_j',
+    	type: 'specimen',
+    	_source: ['analysisResults.citation.citationCode','analysisResults.datasetCode','analysisResults.analysisComment','analysisResults.analysisCode','analysisResults.analizedMaterial','analysisResults.dataResults'], 
+        body: {
+          query: {
+            bool: JSON.parse(queryObj)
+            
+          }
+        }  
+      }
+ 
+  client.search(searchParams).then(function (resp) {
+    if (resp.hits.total == 0) {
+      let msg = 'No data found!'
+      res.send(msg)
+    } else {
+        let hits = resp.hits.hits
+        res.send(parseNestedAnalysisResults(hits,analizedMaterial,analyte,analysisMethod))
+    }
+  },function (err) {
+    console.trace(err.message)
+    res.send(err.message)
+  })
+})
+
 
 router.get("/",function(req,res){
   res.sendFile( "index.html");
