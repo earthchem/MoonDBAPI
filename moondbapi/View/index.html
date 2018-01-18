@@ -1,225 +1,347 @@
+
 <!doctype html>
-<html>
-<head>
-<title>MoonDB API</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="MoonDB API">
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
-<!--
-<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,800' rel='stylesheet' type='text/css'>
--->
-<link href="https://fonts.googleapis.com/css?family=Lato:400,300|PT+Sans" rel="stylesheet" type="text/css">
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Welcome to the MoonDB API portal. The objectective of MonnDB APIs is to provide an easy and fast way to get geochemical data of specimens come from moon.">
 
-
-</head>
-<body>
-
-<div id="header">
-	<nav class="navbar navbar-fixed-top">
-	</nav>
-</div>
-<div id="title" class="container-fluid">
-	<div class="container">
-	</div>
-</div>
-
-<div class="container" id="content">
-<div class="row">
-<h1>The MoonDB API</h1>
-
-
-<h3>Specimen</h3>
-
-<table class="table"><thead>
-<tr>
-<th>URL</th>
-<th>Description</th>
-<th>Parameters</th>
-<th>Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>/specimen/{specimenCode}</td>
-<td>Get single specimen with basic meta data</td>
-<td></td>
-<td><a href="http://api.moondb.org/specimen/12023,155_7A">http://api.moondb.org/specimen/12023,155_7A</a></td>
-</tr>
-<tr>
-<td>/specimenlist/mission/{missionName}</td>
-<td>Find specimens with basic meta data by mission name</td>
-<td></td>
-<td><a href="http://api.moondb.org/specimenlist/mission/Apollo%2011">http://api.moondb.org/specimenlist/mission/Apollo 11</a></td>
-</tr>
-<tr>
-<td>/specimenlist/landmark/{landmarkName}</td>
-<td>Get specimens with basic meta data by landmark name</td>
-<td></td>
-<td><a href="http://api.moondb.org/specimenlist/landmark/SPUR%20CRATER">http://api.moondb.org/specimenlist/landmark/SPUR CRATER</a></td>
-</tr>
-
-</tr>
-<tr>
-<td>/specimenlist/specimentype/{specimenType}</td>
-<td>Get specimens with basic meta data by specimen type</td>
-<td></td>
-<td><a href="http://api.moondb.org/specimenlist/specimentype/Regolith%20Breccia">http://api.moondb.org/specimenlist/specimentype/Regolith Breccia</a></td>
-</tr>
-</tr>
-<tr>
-<td>/specimenlist/samplingtechnique/{samplingTechnique}</td>
-<td>Get specimens with basic meta data by sampling technique</td>
-<td></td>
-<td><a href="http://api.moondb.org/specimenlist/samplingtechnique/Rake">http://api.moondb.org/specimenlist/samplingtechnique/Rake</a></td>
-</tr>
-
-
-</tbody></table>
-
-<h3>AnalysisResults</h3>
-
-<table class="table"><thead>
-<tr>
-<th>URL</th>
-<th>Description</th>
-<th>Parameters</th>
-<th>Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>/data/specimen/{specimenCode}</td>
-<td>Find analysis results by specimen code</td>
-<td></td>
-<td><a href="http://api.moondb.org/data/specimen/12023,155_7A">http://api.moondb.org/data/specimen/12023,155_7A</a></td>
-</tr>
-<tr>
-<tr>
-<td>/data/analizedMaterial/{analizedMaterial}</td>
-<td>Find analysis results by analized material</td>
-<td></td>
-<td><a href="http://api.moondb.org/data/analizedmaterial/ZIRC">http://api.moondb.org/data/analizedmaterial/ZIRC</a></td>
-</tr>
-<tr>
-<td>/data/citation/{citationCode}</td>
-<td>Find analysis results by citation</td>
-<td></td>
-<td><a href="http://api.moondb.org/data/citation/AGRELL, 1970">http://api.moondb.org/data/citation/AGRELL, 1970</a></td>
-</tr>
-
-<tr>
-<tr>
-<td>/data/{filter}</td>
-<td>Find analysis results by combined filter conditions including mission, landmark, specimenType, samplingTechnique, analizedMaterial, analyte and analysisMethod</td>
-<td>{filter} is JSON object like {"mission":[],"landmark":[],"specimenType":[],"samplingTechnique":[],"analizedMaterial":[],"analyte":[],"analysisMethod":[]}</td>
-<td><a href='http://api.moondb.org/data/{"mission":["Apollo 12"],"landmark":[],"specimenType":["Breccia"],"samplingTechnique":[],"analizedMaterial":["ZIRC","GL"],"analyte":["SiO2","CaO"],"analysisMethod":["EMP","SIMS"]}'>http://api.moondb.org/data/{"mission":["Apollo 12"],"landmark":[],"specimenType":["Breccia"],"samplingTechnique":[],"analizedMaterial":["ZIRC","GL"],"analyte":["SiO2","CaO"],"analysisMethod":["EMP","SIMS"]}</a></td>
-</tr>
-
-
-
-</tbody></table>
-
-<h3>Authorities</h3>
-
-<table class="table"><thead>
-<tr>
-<th>URL</th>
-<th>Description</th>
-<th>Parameters</th>
-<th>Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>/authorities/missions</td>
-<td>Find missions</td>
-<td></td>
-<td><a href="http://api.moondb.org/authorities/missions">http://api.moondb.org/authorities/missions</a></td>
-</tr>
-<tr>
-<td>/authorities/landmarks</td>
-<td>Find landmarks</td>
-<td></td>
-<td><a href="http://api.moondb.org/authorities/landmarks">http://api.moondb.org/authorities/landmarks</a></td>
-</tr>
-<tr>
-<td>/authorities/people</td>
-<td>Find people</td>
-<td></td>
-<td><a href="http://api.moondb.org/authorities/people">http://api.moondb.org/authorities/people</a></td>
-</tr>
-<tr>
-<td>/authorities/citations</td>
-<td>Find citations</td>
-<td></td>
-<td><a href="http://api.moondb.org/authorities/citations">http://api.moondb.org/authorities/citations</a></td>
-</tr>
-<tr>
-<td>/authorities/datasets</td>
-<td>Find datasets</td>
-<td></td>
-<td><a href="http://api.moondb.org/authorities/datasets">http://api.moondb.org/authorities/datasets</a></td>
-</tr>
-
-</tbody></table>
-
-<h3>Controlled Vocabularies</h3>
-
-<table class="table"><thead>
-<tr>
-<th>URL</th>
-<th>Description</th>
-<th>Parameters</th>
-<th>Example</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>/cv/specimentypes</td>
-<td>Find specimen types</td>
-<td></td>
-<td><a href="http://api.moondb.org/cv/specimentypes">http://api.moondb.org/cv/specimentypes</a></td>
-</tr>
-
-<tr>
-<td>/cv/samplingtechniques</td>
-<td>Find sampling techniques</td>
-<td></td>
-<td><a href="http://api.moondb.org/cv/samplingtechniques">http://api.moondb.org/cv/samplingtechniques</a></td>
-</tr>
-<tr>
-<td>/cv/analizedmaterials</td>
-<td>Find analized materials</td>
-<td></td>
-<td><a href="http://api.moondb.org/cv/analizedmaterials">http://api.moondb.org/cv/analizedmaterials</a></td>
-</tr>
-<tr>
-<td>/cv/analytes</td>
-<td>Find analytes</td>
-<td></td>
-<td><a href="http://api.moondb.org/cv/analytes">http://api.moondb.org/cv/analytes</a></td>
-</tr>
-<tr>
-<td>/cv/analysismethods</td>
-<td>Find analysis methods</td>
-<td></td>
-<td><a href="http://api.moondb.org/cv/analysismethods">http://api.moondb.org/cv/analysismethods</a></td>
-</tr>
-
-</tbody></table>
-
-
-
-</div>
-</div>
-<div class="container-fluid footer">
-<div class="container" id="logos">
-
-<span id="social">
-</span>
-
-</div>
-
-
-</div>
-
-
-</body>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+		<link href="css/moondbapi.css" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+		<title>MoonDB API</title>
+	</head>	
+	<body>
+		<!--navigation -->
+		<nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #1b496b;">
+				<a class="navbar-brand" href="#">
+					<img src="../image/moondb-logo.png" width="48" alt="">
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+				</button>
+			
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						REST APIs
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#about">About</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#getSpecimen">Speciemn APIs</a>
+						<a class="dropdown-item" href="#getAnalysisResult">Analysis Results APIs</a>
+						<a class="dropdown-item" href="#getAuthority">Authorities APIs</a>
+						<a class="dropdown-item" href="#getCV">Controlled Vocabularies APIs</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#getExample">Data Search Examples</a>
+					</div>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="http://moondb.org">MoonDB</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="http://search.moondb.org">MoonDB Search</a>
+					</li>
+				</ul>
+				<a class="navbar-brand my-2 my-lg-0" href="http://github.com/iedadata/moondbapi">
+						<img src="../image/github-circle-white-transparent.svg" width="36" alt="">
+					</a>
+				</div>
+		</nav>
+		<header class="intro-header" id="start">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="intro-message">
+							<h1 property="og:title schema:name">MoonDB REST APIs</h1>
+							<h3 property="schema:description">The fastest way to pull data out from MoonDB</h3>
+							<hr class="intro-divider">
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<section class="content-section-a" id="about">
+				<article class="row">
+					<div class="col-lg-12 col-sm-6">
+						<hr class="section-heading-spacer">
+						<div class="clearfix"></div>
+							<h2 class="section-heading">REST API Reference</h2>
+							<p class="lead">
+								MoonDB provides extensive access to instances through a set of RESTful APIs.
+								Below you will find a list of the available endpoints with the latest information. 
+								For more information about a particular endpoint, click on "REST APIs" on the top navigation bar to 
+								view a description of the endpoint, applicable query parameters, example queries. All APIs access is over HTTP, and accessed from the http://api.moondb.org. All data is received as JSON.
+							</p>
+						</div>
+				</article>
+		</section>
+		<section class="content-section-a" id="getSpecimen">
+			<div class="col-lg-12 col-sm-6">
+				<hr class="section-heading-spacer">
+				<div class="clearfix"></div>
+				<img class = "section-heading-img" src="../image/ic_view_list_black_24px.svg" width="48" alt="">
+				<h2 class="section-heading">Specimens APIs</h2>
+				<hr class="section-heading-spacer">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>URL Format</th>
+							<th>Description</th>
+							<th>Parameters</th>
+							<th>Example Query</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>/specimen/{specimenCode}</td>
+							<td>Get one specimen with basic meta data by specimen code</td>
+							<td>specimenCode</td>
+							<td><a href="http://api.moondb.org/specimen/12023,155_7A">http://api.moondb.org/specimen/12023,155_7A</a></td>
+						</tr>
+						<tr>
+							<td>/specimenlist/mission/{missionName}</td>
+							<td>Get specimens with basic meta data by mission name</td>
+							<td>missionName</td>
+							<td><a href="http://api.moondb.org/specimenlist/mission/Apollo%2011">http://api.moondb.org/specimenlist/mission/Apollo 11</a></td>
+						</tr>
+						<tr>
+							<td>/specimenlist/landmark/{landmarkName}</td>
+							<td>Get specimens with basic meta data by landmark name</td>
+							<td>landmarkName</td>
+							<td><a href="http://api.moondb.org/specimenlist/landmark/SPUR%20CRATER">http://api.moondb.org/specimenlist/landmark/SPUR CRATER</a></td>
+						</tr>
+						<tr>
+							<td>/specimenlist/specimentype/{specimenType}</td>
+							<td>Get specimens with basic meta data by specimen type</td>
+							<td>specimenType</td>
+							<td><a href="http://api.moondb.org/specimenlist/specimentype/Regolith%20Breccia">http://api.moondb.org/specimenlist/specimentype/Regolith Breccia</a></td>
+						</tr>
+						<tr>
+							<td>/specimenlist/samplingtechnique/{samplingTechnique}</td>
+							<td>Get specimens with basic meta data by sampling technique</td>
+							<td>samplingTechnique</td>
+							<td><a href="http://api.moondb.org/specimenlist/samplingtechnique/Rake">http://api.moondb.org/specimenlist/samplingtechnique/Rake</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>	
+		</section>
+		<section class="content-section-a" id="getAnalysisResult">
+			<div class="col-lg-12 col-sm-6">
+				<hr class="section-heading-spacer">
+				<div class="clearfix"></div>
+				<img class = "section-heading-img" src="../image/ic_view_list_black_24px.svg" width="48" alt="">
+				<h2 class="section-heading">Analysis Results APIs</h2>
+				<hr class="section-heading-spacer">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>URL Format</th>
+							<th>Description</th>
+							<th>Parameters</th>
+							<th>Example Query</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>/data/specimen/{specimenCode}</td>
+							<td>Get analysis results by specimen code</td>
+							<td>specimenCode</td>
+							<td><a href="http://api.moondb.org/data/specimen/12023,155_7A">http://api.moondb.org/data/specimen/12023,155_7A</a></td>
+						</tr>
+						<tr>
+							<td>/data/analyzedMaterial/{analyzedMaterial}</td>
+							<td>Get analysis results by analyzed material</td>
+							<td>analyzedMaterial</td>
+							<td><a href="http://api.moondb.org/data/analyzedmaterial/LEACH">http://api.moondb.org/data/analyzedmaterial/LEACH</a></td>
+						</tr>
+						<tr>
+							<td>/data/citation/{citationCode}</td>
+							<td>Get analysis results by citation</td>
+							<td>citationCode</td>
+							<td><a href="http://api.moondb.org/data/citation/AGRELL, 1970">http://api.moondb.org/data/citation/AGRELL, 1970</a></td>
+						</tr>
+						<tr>
+							<td>/data/{filter}</td>
+							<td>Get analysis results by combined filter conditions including mission, landmark, specimenType, samplingTechnique, analyzedMaterial, analyte and analysisMethod</td>
+							<td>{filter} is JSON object like {"mission":[],"landmark":[],"specimenType":[],"samplingTechnique":[],"analyzedMaterial":[],"analyte":[],"analysisMethod":[]}</td>
+							<td><a href='http://api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["Breccia"],"samplingTechnique":[],"analyzedMaterial":["ZIRCON","GLASS"],"analyte":["SiO2","CaO"],"analysisMethod":["EMP","SIMS"]}'>http://api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["Breccia"],"samplingTechnique":[],"analyzedMaterial":["ZIRCON","GLASS"],"analyte":["SiO2","CaO"],"analysisMethod":["EMP","SIMS"]}</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>	
+		</section>
+		<section class="content-section-a" id="getAuthority">
+			<div class="col-lg-12 col-sm-6">
+				<hr class="section-heading-spacer">
+				<div class="clearfix"></div>
+				<img class = "section-heading-img" src="../image/ic_view_list_black_24px.svg" width="48" alt="">
+				<h2 class="section-heading">Authorities APIs</h2>
+				<hr class="section-heading-spacer">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>URL Format</th>
+							<th>Description</th>
+							<th>Parameters</th>
+							<th>Example Query</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>/authorities/topspecimens</td>
+							<td>Get top level specimens</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/authorities/topspecimens">http://api.moondb.org/authorities/topspecimens</a></td>
+						</tr>						
+						<tr>
+							<td>/authorities/missions</td>
+							<td>Get missions</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/authorities/missions">http://api.moondb.org/authorities/missions</a></td>
+						</tr>
+						<tr>
+							<td>/authorities/landmarks</td>
+							<td>Get landmarks</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/authorities/landmarks">http://api.moondb.org/authorities/landmarks</a></td>
+						</tr>
+						<tr>
+							<td>/authorities/people</td>
+							<td>Get people</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/authorities/people">http://api.moondb.org/authorities/people</a></td>
+						</tr>
+						<tr>
+							<td>/authorities/citations</td>
+							<td>Get citations</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/authorities/citations">http://api.moondb.org/authorities/citations</a></td>
+						</tr>
+						<tr>
+							<td>/authorities/datasets</td>
+							<td>Get datasets</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/authorities/datasets">http://api.moondb.org/authorities/datasets</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+		<section class="content-section-a" id="getCV">
+			<div class="col-lg-12 col-sm-6">
+				<hr class="section-heading-spacer">
+				<div class="clearfix"></div>
+				<img class = "section-heading-img" src="../image/ic_view_list_black_24px.svg" width="48" alt="">
+				<h2 class="section-heading">Controlled Vocabularies APIs</h2>
+				<hr class="section-heading-spacer">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>URL Format</th>
+							<th>Description</th>
+							<th>Parameters</th>
+							<th>Example Query</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>/cv/specimentypes</td>
+							<td>Get specimen types</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/cv/specimentypes">http://api.moondb.org/cv/specimentypes</a></td>
+						</tr>
+						<tr>
+							<td>/cv/samplingtechniques</td>
+							<td>Get sampling techniques</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/cv/samplingtechniques">http://api.moondb.org/cv/samplingtechniques</a></td>
+						</tr>
+						<tr>
+							<td>/cv/analyzedmaterials</td>
+							<td>Get analyzed materials</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/cv/analyzedmaterials">http://api.moondb.org/cv/analyzedmaterials</a></td>
+						</tr>
+						<tr>
+							<td>/cv/analytes</td>
+							<td>Get analytes</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/cv/analytes">http://api.moondb.org/cv/analytes</a></td>
+						</tr>
+						<tr>
+							<td>/cv/analysismethods</td>
+							<td>Get analysis methods</td>
+							<td></td>
+							<td><a href="http://api.moondb.org/cv/analysismethods">http://api.moondb.org/cv/analysismethods</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+		<section class="content-section-a" id="getExample">
+			<div class="col-lg-12 col-sm-6">
+				<hr class="section-heading-spacer">
+				<div class="clearfix"></div>
+				<img class = "section-heading-img" src="../image/ic_view_list_black_24px.svg" width="48" alt="">
+				<h2 class="section-heading">Data Search Examples</h2>
+				<hr class="section-heading-spacer">
+				<li style="font-weight:bold">Electron microprobe analyses on Anorthosites (including rocks and minerals)</li>
+				<a href='http://api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["Anorthosite"],"samplin
+				gTechnique":[],"analyzedMaterial":[],"analyte":[],"analysisMethod":["EMP"]}' style="margin-left:10px">http://
+				api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["Anorthosite"],"samplingTechnique":[],"analyzedMaterial":[],"analyte":[],"analysisMethod":["EMP"]}</a>
+				
+				<li style="font-weight:bold">Water analyses on lunar soil samples</li>
+				<a href='http://api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["SOIL"],"samplin
+				gTechnique":[],"analyzedMaterial":[],"analyte":["H2O"],"analysisMethod":[]}' style="margin-left:10px">http://
+				api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["SOIL"],"samplingTechnique":[],"analyzedMaterial":[],"analyte":["H2O"],"analysisMethod":[]}</a>
+				
+				<li style="font-weight:bold">Th measurements on all Rock samples</li>
+				<a href='http://api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["ROCK"],"samplin
+				gTechnique":[],"analyzedMaterial":[],"analyte":["Th"],"analysisMethod":[]}' style="margin-left:10px">http://
+				api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["ROCK"],"samplingTechnique":[],"analyzedMaterial":[],"analyte":["Th"],"analysisMethod":[]}</a>
+				
+				
+				<li style="font-weight:bold">Basalts with Ti data (both Ti and TiO2) from all missions with any method</li>
+				<a href='http://api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["Basalt"],"samplin
+				gTechnique":[],"analyzedMaterial":[],"analyte":["Ti","TiO2"],"analysisMethod":[]}' style="margin-left:10px">http://
+				api.moondb.org/data/{"mission":[],"landmark":[],"specimenType":["Basalt"],"samplingTechnique":[],"analyzedMaterial":[],"analyte":["Ti","TiO2"],"analysisMethod":[]}</a>
+				
+			</div>
+		</section>
+		<footer>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-3">
+						<a href="http://iedadata.org">
+							<img src="../image/ieda-logo.png">
+						</a>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<p class="copyright text-muted small">
+							Designed and built by <a href="http://iedadata.org/">IEDA</a> at <a href="http://ldeo.columbia.edu">Lamont-Doherty Earth Observatory</a> of <a href="http://columbia.edu/"/>Columbia Univerisy</a>.
+						</p>
+						<p class="copyright text-muted small">Last Updated: Jan 18, 2018</p>
+					</div>
+					<div class="col-sm-12 col-md-1">
+						<a href="http://nasa.gov/">
+							<img src="../image/nasa-logo.svg">
+						</a>
+					</div>
+					<div class="col-sm-12 col-md-2">
+						<P class="fundingInfo text-muted small">Funded by U.S. National Aeronautics and Space Administration (NASA) PDART program</P>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</body>
 </html>
